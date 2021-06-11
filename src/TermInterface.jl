@@ -78,7 +78,7 @@ and `metadata` as the metadata. By default this will execute `head(args...)`.
 `x` parameter can also be a `Type`.
 """
 similarterm(x, head, args; type=nothing, metadata=nothing) = head(args...)
-similarterm(x::Type{Expr}, head, args, type; metadata=nothing) = Expr(head, args...)
+similarterm(x::Type{Expr}, head, args; type=nothing, metadata=nothing) = Expr(head, args...)
 
 end # module
 
