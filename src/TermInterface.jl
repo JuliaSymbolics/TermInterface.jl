@@ -7,6 +7,7 @@ Returns `true` if `x` is a term. If true, `gethead`, `getargs`
 must also be defined for `x` appropriately.
 """
 isterm(x) = false
+isterm(x::Type{Expr}) = true
 
 """
     symtype(x)
@@ -33,13 +34,22 @@ head of the term if `x` represents a function call, for example, the head
 is the function being called.
 """
 function gethead end
+gethead(e::Expr) = e.head
 
 """
     getargs(x)
 
 Get the arguments of `x`, must be defined if `isterm(x)` is `true`.
 """
-function getargs end
+getargs(e::Expr) = e.args
+
+"""
+    arity(x)
+
+Returns the number of arguments of `x`. Implicitly defined 
+if `getargs(x)` is defined.
+"""
+arity(x) = length(getargs(x))
 
 """
     metadata(x)
@@ -64,8 +74,11 @@ end
 
 Returns a term that is in the same closure of types as `typeof(x)`,
 with `head` as the head and `args` as the arguments, `type` as the symtype
-and `metadata` as the metadata. By default this will execute `head(args...)`
+and `metadata` as the metadata. By default this will execute `head(args...)`.
+`x` parameter can also be a `Type`.
 """
-similarterm(x, head, args, type; metadata=nothing) = head(args...)
+similarterm(x, head, args; type=nothing, metadata=nothing) = head(args...)
+similarterm(x::Type{Expr}, head, args; type=nothing, metadata=nothing) = Expr(head, args...)
 
 end # module
+
