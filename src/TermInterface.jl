@@ -8,6 +8,7 @@ must also be defined for `x` appropriately.
 """
 isterm(x) = false
 isterm(x::Type{Expr}) = true
+export isterm
 
 """
     symtype(x)
@@ -17,6 +18,7 @@ Returns the symbolic type of `x`. By default this is just `typeof(x)`.
 function symtype(x)
     typeof(x)
 end
+export symtype
 
 """
     issym(x)
@@ -25,6 +27,7 @@ Returns `true` if `x` is a symbol. If true, `nameof` must be defined
 on `x` and must return a Symbol.
 """
 function issym end
+export issym
 
 """
     gethead(x)
@@ -35,6 +38,7 @@ is the function being called.
 """
 function gethead end
 gethead(e::Expr) = e.head
+export gethead
 
 """
     getargs(x)
@@ -42,6 +46,7 @@ gethead(e::Expr) = e.head
 Get the arguments of `x`, must be defined if `isterm(x)` is `true`.
 """
 getargs(e::Expr) = e.args
+export getargs
 
 """
     arity(x)
@@ -50,6 +55,8 @@ Returns the number of arguments of `x`. Implicitly defined
 if `getargs(x)` is defined.
 """
 arity(x) = length(getargs(x))
+export arity
+
 
 """
     metadata(x)
@@ -57,6 +64,8 @@ arity(x) = length(getargs(x))
 Return the metadata attached to `x`.
 """
 metadata(x) = nothing
+export metadata
+
 
 """
     metadata(x, md)
@@ -82,6 +91,7 @@ similarterm(x::Type{Expr}, head, args; type=nothing, metadata=nothing) = Expr(he
 function similarterm(x::Type{T}, head::T, args; type=nothing, metadata=nothing) where T
     if !isterm(T) head else head(args...) end
 end 
+export similarterm
 
 end # module
 
