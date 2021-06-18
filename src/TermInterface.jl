@@ -79,6 +79,9 @@ and `metadata` as the metadata. By default this will execute `head(args...)`.
 """
 similarterm(x, head, args; type=nothing, metadata=nothing) = head(args...)
 similarterm(x::Type{Expr}, head, args; type=nothing, metadata=nothing) = Expr(head, args...)
+function similarterm(x::Type{T}, head::T, args; type=nothing, metadata=nothing) where T
+    if !isterm(T) head else head(args...) end
+end 
 
 end # module
 
