@@ -6,8 +6,9 @@ module TermInterface
 Returns `true` if `x` is a term. If true, `gethead`, `getargs`
 must also be defined for `x` appropriately.
 """
-isterm(x) = false
+isterm(x) = isterm(typeof(x))
 isterm(x::Type{Expr}) = true
+isterm(x::Type{T}) where {T} = false
 export isterm
 
 """
