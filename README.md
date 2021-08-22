@@ -31,7 +31,9 @@ for `simplify` to work. Other required methods are `gethead` and `isterm`
 
 In addition, the methods for `Base.hash` and `Base.isequal` should also be implemented by the types for the purposes of substitution and equality matching respectively.
 
-#### `similarterm(t::MyType, f, args; type=T, metadata=nothing)` or `similarterm(t::Type{MyType}, f, args; type=T, metadata=nothing)`
+#### `similarterm(t::MyType, f, args; type=T, metadata=nothing)`
+
+Or `similarterm(t::Type{MyType}, f, args; type=T, metadata=nothing)`.
 
 Construct a new term with the operation `f` and arguments `args`, the term should be similar to `t` in type. if `t` is a `SymbolicUtils.Term` object a new Term is created with the same symtype as `t`. If not, the result is computed as `f(args...)`. Defining this method for your term type will reduce any performance loss in performing `f(args...)` (esp. the splatting, and redundant type computation). T is the symtype of the output term. You can use `SymbolicUtils.promote_symtype` to infer this type.
 
@@ -54,7 +56,7 @@ rules that may be implemented in the future.
 Suppose you were feeling the temptations of type piracy and wanted to make a quick and dirty
 symbolic library built on top of Julia's `Expr` type, e.g.
 
-```julia:piracy1
+```julia
 for f ∈ [:+, :-, :*, :/, :^] #Note, this is type piracy!
     @eval begin
         Base.$f(x::Union{Expr, Symbol}, y::Number) = Expr(:call, $f, x, y)
@@ -71,7 +73,7 @@ ex = 1 + (:x - 2)
 
 How can we use SymbolicUtils.jl to convert `ex` to `(-)(:x, 1)`? We simply implement `isterm`,
 `head`, `arguments` and we'll be able to do rule-based rewriting on `Expr`s:
-```julia:piracy2
+```julia
 using TermInterface
 using SymbolicUtils
 
@@ -85,7 +87,7 @@ TermInterface.similarterm(x::Type{Expr}, head, args; type=nothing, metadata=noth
 ```
 
 However, this is not enough to get SymbolicUtils to use its own algebraic simplification system on `Expr`s:
-```julia:piracy3
+```julia
 simplify(ex)
 ```
 
@@ -93,7 +95,7 @@ The reason that the expression was not simplified is that the expression tree is
 doesn't know what rules to apply to the expression. To mimic the behaviour of most computer algebra 
 systems, the simplest thing to do would be to assume that all `Expr`s are of type `Number`:
 
-```julia:piracy4
+```julia
 TermInterface.symtype(s::Expr) = Real
 TermInterface.symtype(s::Sym) = Real
 
