@@ -15,6 +15,9 @@ export isterm
     symtype(x)
 
 Returns the symbolic type of `x`. By default this is just `typeof(x)`.
+Define this for your symbolic types if you want `SymbolicUtils.simplify` to apply rules
+specific to numbers (such as commutativity of multiplication). Or such
+rules that may be implemented in the future.
 """
 function symtype(x)
     typeof(x)
@@ -80,7 +83,7 @@ end
 
 
 """
-    similarterm(x, head, args, type; metadata=nothing)
+    similarterm(x, head, args; type=nothing, metadata=nothing)
 
 Returns a term that is in the same closure of types as `typeof(x)`,
 with `head` as the head and `args` as the arguments, `type` as the symtype
