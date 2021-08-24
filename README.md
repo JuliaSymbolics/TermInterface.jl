@@ -31,9 +31,9 @@ for `simplify` to work. Other required methods are `gethead` and `isterm`
 
 In addition, the methods for `Base.hash` and `Base.isequal` should also be implemented by the types for the purposes of substitution and equality matching respectively.
 
-#### `similarterm(t::MyType, f, args; type=T, metadata=nothing)`
+#### `similarterm(t::MyType, f, args, symtype=T; metadata=nothing)`
 
-Or `similarterm(t::Type{MyType}, f, args; type=T, metadata=nothing)`.
+Or `similarterm(t::Type{MyType}, f, args, symtype=T; metadata=nothing)`.
 
 Construct a new term with the operation `f` and arguments `args`, the term should be similar to `t` in type. if `t` is a `SymbolicUtils.Term` object a new Term is created with the same symtype as `t`. If not, the result is computed as `f(args...)`. Defining this method for your term type will reduce any performance loss in performing `f(args...)` (esp. the splatting, and redundant type computation). T is the symtype of the output term. You can use `SymbolicUtils.promote_symtype` to infer this type.
 
