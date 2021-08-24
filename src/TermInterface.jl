@@ -93,6 +93,10 @@ and `metadata` as the metadata. By default this will execute `head(args...)`.
 similarterm(x, head, args, symtype=nothing; metadata=nothing) = 
     similarterm(typeof(x), head, args, symtype; metadata=nothing)
 
+similarterm(x, head, args; metadata=nothing) = 
+    similarterm(typeof(x), head, args; metadata=nothing)
+
+
 similarterm(x::Type{Expr}, head, args, symtype=nothing; metadata=nothing) = Expr(head, args...)
 function similarterm(x::Type{T}, head::T, args, symtype=nothing; metadata=nothing) where T
     if !isterm(T) head else head(args...) end
