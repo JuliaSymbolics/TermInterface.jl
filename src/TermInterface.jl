@@ -83,20 +83,23 @@ end
 
 
 """
-    similarterm(x, head, args; type=nothing, metadata=nothing)
+    similarterm(x, head, args, symtype=nothing; metadata=nothing)
 
 Returns a term that is in the same closure of types as `typeof(x)`,
 with `head` as the head and `args` as the arguments, `type` as the symtype
 and `metadata` as the metadata. By default this will execute `head(args...)`.
 `x` parameter can also be a `Type`.
 """
-similarterm(x, head, args; type=nothing, metadata=nothing) = 
-    similarterm(typeof(x), head, args; type=type, metadata=nothing)
-similarterm(x::Type{Expr}, head, args; type=nothing, metadata=nothing) = Expr(head, args...)
-function similarterm(x::Type{T}, head::T, args; type=nothing, metadata=nothing) where T
+similarterm(x, head, args, symtype=nothing; metadata=nothing) = 
+    similarterm(typeof(x), head, args, type; metadata=nothing)
+
+similarterm(x::Type{Expr}, head, args, symtype=nothing; metadata=nothing) = Expr(head, args...)
+function similarterm(x::Type{T}, head::T, args, symtype=nothing; metadata=nothing) where T
     if !isterm(T) head else head(args...) end
 end 
 export similarterm
+
+include("utils.jl")
 
 end # module
 
