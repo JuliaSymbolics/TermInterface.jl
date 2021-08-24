@@ -13,3 +13,4 @@ export is_operation
 Count the nodes in a symbolic expression tree satisfying `isterm` and `getargs`.
 """
 node_count(t) = isterm(t) ? reduce(+, node_count(x) for x in  getargs(t), init=0) + 1 : 1
+export node_count
