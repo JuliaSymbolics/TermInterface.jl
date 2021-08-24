@@ -91,7 +91,7 @@ and `metadata` as the metadata. By default this will execute `head(args...)`.
 `x` parameter can also be a `Type`.
 """
 similarterm(x, head, args, symtype=nothing; metadata=nothing) = 
-    similarterm(typeof(x), head, args, type; metadata=nothing)
+    similarterm(typeof(x), head, args, symtype; metadata=nothing)
 
 similarterm(x::Type{Expr}, head, args, symtype=nothing; metadata=nothing) = Expr(head, args...)
 function similarterm(x::Type{T}, head::T, args, symtype=nothing; metadata=nothing) where T
