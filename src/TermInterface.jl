@@ -1,15 +1,15 @@
 module TermInterface
 
 """
-    isterm(x)
+    istree(x)
 
-Returns `true` if `x` is a term. If true, `gethead`, `getargs`
+Returns `true` if `x` is a term. If true, `operation`, `arguments`
 must also be defined for `x` appropriately.
 """
-isterm(x) = isterm(typeof(x))
-isterm(x::Type{Expr}) = true
-isterm(x::Type{T}) where {T} = false
-export isterm
+istree(x) = istree(typeof(x))
+istree(x::Type{Expr}) = true
+istree(x::Type{T}) where {T} = false
+export istree
 
 """
     symtype(x)
@@ -34,31 +34,31 @@ function issym end
 export issym
 
 """
-    gethead(x)
+    operation(x)
 
-If `x` is a term as defined by `isterm(x)`, `gethead(x)` returns the
+If `x` is a term as defined by `istree(x)`, `operation(x)` returns the
 head of the term if `x` represents a function call, for example, the head
 is the function being called.
 """
-function gethead end
-gethead(e::Expr) = e.head
-export gethead
+function operation end
+operation(e::Expr) = e.head
+export operation
 
 """
-    getargs(x)
+    arguments(x)
 
-Get the arguments of `x`, must be defined if `isterm(x)` is `true`.
+Get the arguments of `x`, must be defined if `istree(x)` is `true`.
 """
-getargs(e::Expr) = e.args
-export getargs
+arguments(e::Expr) = e.args
+export arguments
 
 """
     arity(x)
 
 Returns the number of arguments of `x`. Implicitly defined 
-if `getargs(x)` is defined.
+if `arguments(x)` is defined.
 """
-arity(x) = length(getargs(x))
+arity(x) = length(arguments(x))
 export arity
 
 
@@ -99,7 +99,7 @@ similarterm(x, head, args; metadata=nothing) =
 
 similarterm(x::Type{Expr}, head, args, symtype=nothing; metadata=nothing) = Expr(head, args...)
 function similarterm(x::Type{T}, head::T, args, symtype=nothing; metadata=nothing) where T
-    if !isterm(T) head else head(args...) end
+    if !istree(T) head else head(args...) end
 end 
 export similarterm
 

@@ -9,25 +9,25 @@ You should define the following methods for an expression tree type `T` with sym
 with TermInterface.jl, and therefore with [SymbolicUtils.jl](https://github.com/JuliaSymbolics/SymbolicUtils.jl) 
 and [Metatheory.jl](https://github.com/0x0f0f0f/Metatheory.jl).
 
-#### `isterm(x::T)` or `isterm(x::Type{T})`
+#### `istree(x::T)` or `istree(x::Type{T})`
 
 Check if `x` represents an expression tree. If returns true,
-it will be assumed that `gethead(::T)` and `getargs(::T)`
+it will be assumed that `operation(::T)` and `arguments(::T)`
 methods are defined. Definining these three should allow use
 of `SymbolicUtils.simplify` on custom types. Optionally `symtype(x)` can be
 defined to return the expected type of the symbolic expression.
 
-#### `gethead(x::T)`
+#### `operation(x::T)`
 
 Returns the head (a function object) performed by an expression
-tree. Called only if `isterm(::T)` is true. Part of the API required
-for `simplify` to work. Other required methods are `getargs` and `isterm`
+tree. Called only if `istree(::T)` is true. Part of the API required
+for `simplify` to work. Other required methods are `arguments` and `istree`
 
-#### `getargs(x::T)`
+#### `arguments(x::T)`
 
 Returns the arguments (a `Vector`) for an expression tree.
-Called only if `isterm(x)` is `true`. Part of the API required
-for `simplify` to work. Other required methods are `gethead` and `isterm`
+Called only if `istree(x)` is `true`. Part of the API required
+for `simplify` to work. Other required methods are `operation` and `istree`
 
 In addition, the methods for `Base.hash` and `Base.isequal` should also be implemented by the types for the purposes of substitution and equality matching respectively.
 
@@ -71,16 +71,16 @@ ex = 1 + (:x - 2)
 ```
 
 
-How can we use SymbolicUtils.jl to convert `ex` to `(-)(:x, 1)`? We simply implement `isterm`,
+How can we use SymbolicUtils.jl to convert `ex` to `(-)(:x, 1)`? We simply implement `istree`,
 `head`, `arguments` and we'll be able to do rule-based rewriting on `Expr`s:
 ```julia
 using TermInterface
 using SymbolicUtils
 
 
-TermInterface.isterm(ex::Expr) = ex.head == :call
-TermInterface.gethead(ex::Expr) = ex.args[1]
-TermInterface.getargs(ex::Expr) = ex.args[2:end]
+TermInterface.istree(ex::Expr) = ex.head == :call
+TermInterface.operation(ex::Expr) = ex.args[1]
+TermInterface.arguments(ex::Expr) = ex.args[2:end]
 TermInterface.similarterm(x::Type{Expr}, head, args; type=nothing, metadata=nothing) = Expr(:call, head, args...)
 
 @rule(~x => ~x - 1)(ex)
