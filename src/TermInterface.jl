@@ -30,7 +30,8 @@ export symtype
 Returns `true` if `x` is a symbol. If true, `nameof` must be defined
 on `x` and must return a Symbol.
 """
-function issym end
+issym(x) = issym(typeof(x))
+issym(x::Type{T}) where {T} = false
 export issym
 
 """
@@ -96,7 +97,7 @@ similarterm(x, head, args, symtype=nothing; metadata=nothing) =
 similarterm(x::Type{Expr}, head, args, symtype=nothing; metadata=nothing) = Expr(head, args...)
 
 function similarterm(x::Type{T}, head, args, symtype=nothing; metadata=nothing) where T
-    if !istree(T) head else head(args...) end
+    !istree(T) ? head : head(args...)
 end 
 export similarterm
 
