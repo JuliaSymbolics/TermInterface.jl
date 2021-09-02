@@ -81,7 +81,11 @@ using SymbolicUtils
 TermInterface.istree(ex::Expr) = ex.head == :call
 TermInterface.operation(ex::Expr) = ex.args[1]
 TermInterface.arguments(ex::Expr) = ex.args[2:end]
-TermInterface.similarterm(x::Type{Expr}, head, args; type=nothing, metadata=nothing) = Expr(:call, head, args...)
+TermInterface.similarterm(x::Type{Expr}, head, args, symtype=nothing; metadata=nothing) = 
+    Expr(:call, head, args...)
+
+TermInterface.issym(s::Symbol) = true
+Base.nameof(s::Symbol) = s
 
 @rule(~x => ~x - 1)(ex)
 ```
@@ -96,8 +100,9 @@ doesn't know what rules to apply to the expression. To mimic the behaviour of mo
 systems, the simplest thing to do would be to assume that all `Expr`s are of type `Number`:
 
 ```julia
-TermInterface.symtype(s::Expr) = Real
-TermInterface.symtype(s::Sym) = Real
+Base.zero(t::Expr) = 0
+TermInterface.symtype(::Expr) = Real
+TermInterface.symtype(::Symbol) = Real
 
 simplify(ex)
 ```
