@@ -66,6 +66,19 @@ Get the arguments of `x`, must be defined if `istree(x)` is `true`.
 function arguments end
 export arguments
 
+
+"""
+    unsorted_arguments(x::T)
+
+If x is a term satisfying `istree(x)` and your term type `T` orovides
+and optimized implementation for storing the arguments, this function can 
+be used to retrieve the arguments when the order of arguments does not matter 
+but the speed of the operation does.
+"""
+unsorted_arguments(x) = arguments(x)
+export unsorted_arguments
+
+
 """
     arity(x)
 

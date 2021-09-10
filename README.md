@@ -50,6 +50,13 @@ Construct a new term with the operation `f` and arguments `args`, the term shoul
 
 ### Optional
 
+#### `unsorted_arguments(x)`
+
+If x is a term satisfying `istree(x)` and your term type `T` orovides
+and optimized implementation for storing the arguments, this function can 
+be used to retrieve the arguments when the order of arguments does not matter 
+but the speed of the operation does. Defaults to `arguments(x)`.
+
 #### `symtype(x)`
 
 The supposed type of values in the domain of x. Tracing tools can use this type to
