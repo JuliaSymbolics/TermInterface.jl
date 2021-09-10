@@ -1,7 +1,7 @@
 name = "TermInterface"
 uuid = "8ea1fca8-c5ef-4a55-8b96-4e9afe9c9a3c"
 authors = ["Shashi Gowda <gowda@mit.edu>", "Alessandro Cheli <sudo-woodo3@protonmail.com>"]
-version = "0.2"
+version = "0.2.0"
 
 [compat]
 julia = "1"
