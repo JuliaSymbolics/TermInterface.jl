@@ -7,7 +7,6 @@ Returns `true` if `x` is a term. If true, `operation`, `arguments`
 must also be defined for `x` appropriately.
 """
 istree(x) = istree(typeof(x))
-istree(x::Type{Expr}) = true
 istree(x::Type{T}) where {T} = false
 export istree
 
@@ -35,6 +34,21 @@ issym(x::Type{T}) where {T} = false
 export issym
 
 """
+    exprhead(x)
+
+If `x` is a term as defined by `istree(x)`, `exprhead(x)` must return a symbol,
+corresponding to the head of the `Expr` most similar to the term `x`.
+If `x` represents a function call, for example, the `exprhead` is `:call`.
+If `x` represents an indexing operation, such as `arr[i]`, then `exprhead` is `:ref`.
+Note that `exprhead` is different from `operation` and both functions should 
+be defined correctly in order to let other packages provide code generation 
+and pattern matching features. 
+"""
+function exprhead end
+export exprhead
+
+
+"""
     operation(x)
 
 If `x` is a term as defined by `istree(x)`, `operation(x)` returns the
@@ -42,7 +56,6 @@ head of the term if `x` represents a function call, for example, the head
 is the function being called.
 """
 function operation end
-operation(e::Expr) = e.head
 export operation
 
 """
@@ -50,7 +63,7 @@ export operation
 
 Get the arguments of `x`, must be defined if `istree(x)` is `true`.
 """
-arguments(e::Expr) = e.args
+function arguments end
 export arguments
 
 """
@@ -91,17 +104,17 @@ with `head` as the head and `args` as the arguments, `type` as the symtype
 and `metadata` as the metadata. By default this will execute `head(args...)`.
 `x` parameter can also be a `Type`.
 """
-similarterm(x, head, args, symtype=nothing; metadata=nothing) = 
-    similarterm(typeof(x), head, args, symtype; metadata=metadata)
+similarterm(x, head, args, symtype=nothing; metadata=nothing, exprhead=exprhead(x)) = 
+    similarterm(typeof(x), head, args, symtype; metadata=metadata, exprhead=exprhead)
 
-similarterm(x::Type{Expr}, head, args, symtype=nothing; metadata=nothing) = Expr(head, args...)
-
-function similarterm(x::Type{T}, head, args, symtype=nothing; metadata=nothing) where T
+function similarterm(x::Type{T}, head, args, symtype=nothing; metadata=nothing, exprhead=:call) where T
     !istree(T) ? head : head(args...)
 end 
 export similarterm
 
 include("utils.jl")
+
+include("expr.jl")
 
 end # module
 
