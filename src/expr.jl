@@ -20,5 +20,5 @@ function similarterm(x::Type{Expr}, head, args, symtype=nothing; metadata=nothin
 end
 
 expr_similarterm(head, args, ::Val{:call}) = Expr(:call, head, args...)
-expr_similarterm(head, args, ::Val{:macrocall}) = Expr(:call, head, args...) # discard linenumbernodes?
+expr_similarterm(head, args, ::Val{:macrocall}) = Expr(:macrocall, head, args...) # discard linenumbernodes?
 expr_similarterm(head, args, ::Val{eh}) where {eh} = Expr(eh, args...)
