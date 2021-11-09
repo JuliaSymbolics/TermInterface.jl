@@ -9,6 +9,7 @@ arguments(e::Expr) =  expr_arguments(e, Val{exprhead(e)}())
 
 # See https://docs.julialang.org/en/v1/devdocs/ast/
 expr_operation(e::Expr, ::Union{Val{:call}, Val{:macrocall}}) = e.args[1]
+expr_operation(e::Expr, ::Union{Val{:ref}}) = getindex
 expr_operation(e::Expr, ::Val{T}) where {T} = T
 
 expr_arguments(e::Expr, ::Union{Val{:call}, Val{:macrocall}}) = e.args[2:end]
