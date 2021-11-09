@@ -9,7 +9,7 @@ using Test
     @test ex == similarterm(ex, :f, [:a, :b])
 
     ex = :(arr[i, j])
-    @test operation(ex) == :ref
+    @test operation(ex) == getindex
     @test arguments(ex) == [:arr, :i, :j]
     @test exprhead(ex) == :ref
     @test ex == similarterm(Expr, :ref, [:arr, :i, :j]; exprhead=:ref)
