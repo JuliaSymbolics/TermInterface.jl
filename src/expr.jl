@@ -16,10 +16,6 @@ expr_arguments(e::Expr, ::Union{Val{:call},Val{:macrocall}}) = e.args[2:end]
 expr_arguments(e::Expr, _) = e.args
 
 
-function similarterm(x::Type{Expr}, head, args, symtype = nothing; metadata = nothing, exprhead = :call)
-  expr_similarterm(head, args, Val{exprhead}())
-end
-
 function similarterm(x::Expr, head, args, symtype = nothing; metadata = nothing, exprhead = exprhead(x))
   expr_similarterm(head, args, Val{exprhead}())
 end
