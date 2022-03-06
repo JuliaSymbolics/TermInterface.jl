@@ -117,16 +117,9 @@ and `metadata` as the metadata. By default this will execute `head(args...)`.
 when manipulating `Expr`s.
 """
 function similarterm(x, head, args, symtype = nothing; metadata = nothing, exprhead = nothing)
-  if exprhead === nothing
-    similarterm(typeof(x), head, args, symtype; metadata = metadata)
-  else
-    similarterm(typeof(x), head, args, symtype; metadata = metadata, exprhead = exprhead)
-  end
+  !istree(x) ? head : head(args...)
 end
 
-function similarterm(x::Type{T}, head, args, symtype = nothing; metadata = nothing, exprhead = :call) where {T}
-  !istree(T) ? head : head(args...)
-end
 export similarterm
 
 include("utils.jl")
