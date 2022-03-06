@@ -1,7 +1,7 @@
 module TermInterface
 
 """
-    istree(x)
+  istree(x)
 
 Returns `true` if `x` is a term. If true, `operation`, `arguments`
 must also be defined for `x` appropriately.
@@ -11,7 +11,7 @@ istree(x::Type{T}) where {T} = false
 export istree
 
 """
-    symtype(x)
+  symtype(x)
 
 Returns the symbolic type of `x`. By default this is just `typeof(x)`.
 Define this for your symbolic types if you want `SymbolicUtils.simplify` to apply rules
@@ -19,12 +19,12 @@ specific to numbers (such as commutativity of multiplication). Or such
 rules that may be implemented in the future.
 """
 function symtype(x)
-    typeof(x)
+  typeof(x)
 end
 export symtype
 
 """
-    issym(x)
+  issym(x)
 
 Returns `true` if `x` is a symbol. If true, `nameof` must be defined
 on `x` and must return a Symbol.
@@ -34,7 +34,7 @@ issym(x::Type{T}) where {T} = false
 export issym
 
 """
-    exprhead(x)
+  exprhead(x)
 
 If `x` is a term as defined by `istree(x)`, `exprhead(x)` must return a symbol,
 corresponding to the head of the `Expr` most similar to the term `x`.
@@ -49,7 +49,7 @@ export exprhead
 
 
 """
-    operation(x)
+  operation(x)
 
 If `x` is a term as defined by `istree(x)`, `operation(x)` returns the
 head of the term if `x` represents a function call, for example, the head
@@ -59,7 +59,7 @@ function operation end
 export operation
 
 """
-    arguments(x)
+  arguments(x)
 
 Get the arguments of `x`, must be defined if `istree(x)` is `true`.
 """
@@ -68,7 +68,7 @@ export arguments
 
 
 """
-    unsorted_arguments(x::T)
+  unsorted_arguments(x::T)
 
 If x is a term satisfying `istree(x)` and your term type `T` orovides
 and optimized implementation for storing the arguments, this function can 
@@ -80,7 +80,7 @@ export unsorted_arguments
 
 
 """
-    arity(x)
+  arity(x)
 
 Returns the number of arguments of `x`. Implicitly defined 
 if `arguments(x)` is defined.
@@ -90,7 +90,7 @@ export arity
 
 
 """
-    metadata(x)
+  metadata(x)
 
 Return the metadata attached to `x`.
 """
@@ -99,18 +99,18 @@ export metadata
 
 
 """
-    metadata(x, md)
+  metadata(x, md)
 
 Returns a new term which has the structure of `x` but also has
 the metadata `md` attached to it.
 """
 function metadata(x, data)
-    error("Setting metadata on $x is not possible")
+  error("Setting metadata on $x is not possible")
 end
 
 
 """
-    similarterm(x, head, args, symtype=nothing; metadata=nothing, exprhead=:call)
+  similarterm(x, head, args, symtype=nothing; metadata=nothing, exprhead=:call)
 
 Returns a term that is in the same closure of types as `typeof(x)`,
 with `head` as the head and `args` as the arguments, `type` as the symtype
@@ -118,17 +118,17 @@ and `metadata` as the metadata. By default this will execute `head(args...)`.
 `x` parameter can also be a `Type`. The `exprhead` keyword argument is useful 
 when manipulating `Expr`s.
 """
-function similarterm(x, head, args, symtype=nothing; metadata=nothing, exprhead=nothing)
-    if exprhead === nothing
-        similarterm(typeof(x), head, args, symtype; metadata=metadata)
-    else
-        similarterm(typeof(x), head, args, symtype; metadata=metadata, exprhead=exprhead)
-    end
+function similarterm(x, head, args, symtype = nothing; metadata = nothing, exprhead = nothing)
+  if exprhead === nothing
+    similarterm(typeof(x), head, args, symtype; metadata = metadata)
+  else
+    similarterm(typeof(x), head, args, symtype; metadata = metadata, exprhead = exprhead)
+  end
 end
 
-function similarterm(x::Type{T}, head, args, symtype=nothing; metadata=nothing, exprhead=:call) where T
-    !istree(T) ? head : head(args...)
-end 
+function similarterm(x::Type{T}, head, args, symtype = nothing; metadata = nothing, exprhead = :call) where {T}
+  !istree(T) ? head : head(args...)
+end
 export similarterm
 
 include("utils.jl")
