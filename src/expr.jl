@@ -1,7 +1,7 @@
 # This file contains default definitions for TermInterface methods on Julia
 # Builtin Expr type.
 
-istree(x::Type{Expr}) = true
+istree(x::Expr) = true
 exprhead(e::Expr) = e.head
 
 operation(e::Expr) = expr_operation(e, Val{exprhead(e)}())

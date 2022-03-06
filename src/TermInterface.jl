@@ -6,8 +6,7 @@ module TermInterface
 Returns `true` if `x` is a term. If true, `operation`, `arguments`
 must also be defined for `x` appropriately.
 """
-istree(x) = istree(typeof(x))
-istree(x::Type{T}) where {T} = false
+istree(x) = false
 export istree
 
 """
@@ -29,8 +28,7 @@ export symtype
 Returns `true` if `x` is a symbol. If true, `nameof` must be defined
 on `x` and must return a Symbol.
 """
-issym(x) = issym(typeof(x))
-issym(x::Type{T}) where {T} = false
+issym(x) = false
 export issym
 
 """
