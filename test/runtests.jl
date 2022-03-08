@@ -1,8 +1,8 @@
 using TermInterface
 using Test
 
-@testset "Expr" begin 
-    ex = :(f(a,b))
+@testset "Expr" begin
+    ex = :(f(a, b))
     @test operation(ex) == :f
     @test arguments(ex) == [:a, :b]
     @test exprhead(ex) == :call
@@ -12,7 +12,7 @@ using Test
     @test operation(ex) == getindex
     @test arguments(ex) == [:arr, :i, :j]
     @test exprhead(ex) == :ref
-    @test ex == similarterm(Expr, :ref, [:arr, :i, :j]; exprhead=:ref)
+    @test ex == similarterm(ex, :ref, [:arr, :i, :j]; exprhead = :ref)
     @test ex == similarterm(ex, :ref, [:arr, :i, :j])
 end
 
