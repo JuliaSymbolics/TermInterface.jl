@@ -6,8 +6,7 @@ module TermInterface
 Returns `true` if `x` is a term. If true, `operation`, `arguments`
 must also be defined for `x` appropriately.
 """
-istree(x) = istree(typeof(x))
-istree(x::Type{T}) where {T} = false
+istree(x) = false
 export istree
 
 """
@@ -29,8 +28,7 @@ export symtype
 Returns `true` if `x` is a symbol. If true, `nameof` must be defined
 on `x` and must return a Symbol.
 """
-issym(x) = issym(typeof(x))
-issym(x::Type{T}) where {T} = false
+issym(x) = false
 export issym
 
 """
@@ -119,16 +117,9 @@ and `metadata` as the metadata. By default this will execute `head(args...)`.
 when manipulating `Expr`s.
 """
 function similarterm(x, head, args, symtype = nothing; metadata = nothing, exprhead = nothing)
-  if exprhead === nothing
-    similarterm(typeof(x), head, args, symtype; metadata = metadata)
-  else
-    similarterm(typeof(x), head, args, symtype; metadata = metadata, exprhead = exprhead)
-  end
+  !istree(x) ? head : head(args...)
 end
 
-function similarterm(x::Type{T}, head, args, symtype = nothing; metadata = nothing, exprhead = :call) where {T}
-  !istree(T) ? head : head(args...)
-end
 export similarterm
 
 include("utils.jl")
