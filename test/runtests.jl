@@ -15,5 +15,3 @@ using Test
     @test ex == similarterm(ex, :ref, [:arr, :i, :j]; exprhead = :ref)
     @test ex == similarterm(ex, :ref, [:arr, :i, :j])
 end
-
-# TODO add SymbolicUtils tests??
