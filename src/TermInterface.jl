@@ -117,11 +117,10 @@ and `metadata` as the metadata. By default this will execute `head(args...)`.
 when manipulating `Expr`s.
 """
 function similarterm(x, head, args, symtype = nothing; metadata = nothing, exprhead = nothing)
-  if exprhead === nothing
-    similarterm(x, head, args, symtype; metadata = metadata)
-  else
-    similarterm(x, head, args, symtype; metadata = metadata, exprhead = exprhead)
-  end
+    head(args...)
+end
+function similarterm(x, head, args, symtype = nothing; metadata = nothing)
+    head(args...)
 end
 
 export similarterm
