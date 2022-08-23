@@ -119,9 +119,6 @@ when manipulating `Expr`s.
 function similarterm(x, head, args, symtype = nothing; metadata = nothing, exprhead = nothing)
     head(args...)
 end
-function similarterm(x, head, args, symtype = nothing; metadata = nothing)
-    head(args...)
-end
 
 export similarterm
 
