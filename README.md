@@ -52,8 +52,8 @@ Construct a new term with the operation `f` and arguments `args`, the term shoul
 
 #### `unsorted_arguments(x)`
 
-If x is a term satisfying `istree(x)` and your term type `T` orovides
-and optimized implementation for storing the arguments, this function can 
+If x is a term satisfying `istree(x)` and your term type `T` provides
+an optimized implementation for storing the arguments, this function can 
 be used to retrieve the arguments when the order of arguments does not matter 
 but the speed of the operation does. Defaults to `arguments(x)`.
 
