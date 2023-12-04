@@ -1,26 +1,41 @@
 # This file contains default definitions for TermInterface methods on Julia
 # Builtin Expr type.
 
-istree(x::Expr) = true
-exprhead(e::Expr) = e.head
+struct ExprHead
+  head
+end
+export ExprHead
 
-operation(e::Expr) = expr_operation(e, Val{exprhead(e)}())
-arguments(e::Expr) = expr_arguments(e, Val{exprhead(e)}())
+istree(x::Expr) = true
+head(e::Expr) = ExprHead(head)
+tail(e::Expr) = e.args
 
 # See https://docs.julialang.org/en/v1/devdocs/ast/
-expr_operation(e::Expr, ::Union{Val{:call},Val{:macrocall}}) = e.args[1]
-expr_operation(e::Expr, ::Union{Val{:ref}}) = getindex
-expr_operation(e::Expr, ::Val{T}) where {T} = T
+function operation(e::Expr)
+  h = head(e)
+  hh = h.head
+  if hh in (:call, :macrocall)
+    e.args[1]
+  elseif hh == :ref
+    getindex
+  else
+    hh
+  end
+end
 
-expr_arguments(e::Expr, ::Union{Val{:call},Val{:macrocall}}) = e.args[2:end]
-expr_arguments(e::Expr, _) = e.args
+function arguments(e::Expr)
+  h = head(e)
+  hh = h.head
+  if hh in (:call, :macrocall)
+    e.args[2:end]
+  else
+    e.args
+  end
+  expr_arguments(e, Val{exprhead(e)}())
+end
 
-
-function similarterm(x::Expr, head, args, symtype = nothing; metadata = nothing, exprhead = exprhead(x))
+function similarterm(x::Expr, head, args, symtype=nothing; metadata=nothing, exprhead=exprhead(x))
   expr_similarterm(head, args, Val{exprhead}())
 end
 
-
-expr_similarterm(head, args, ::Val{:call}) = Expr(:call, head, args...)
-expr_similarterm(head, args, ::Val{:macrocall}) = Expr(:macrocall, head, args...) # discard linenumbernodes?
-expr_similarterm(head, args, ::Val{eh}) where {eh} = Expr(eh, args...)
+maketerm(head::ExprHead, tail; type=Any, metadata=nothing) = Expr(head.head, tail...)

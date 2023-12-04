@@ -45,12 +45,29 @@ and pattern matching features.
 function exprhead end
 export exprhead
 
+"""
+  head(x)
+
+If `x` is a term as defined by `istree(x)`, `head(x)` returns the
+head of the term if `x`. The `head` type has to be provided by the package.
+"""
+function head end
+export head
+
+"""
+  tail(x)
+
+Get the arguments of `x`, must be defined if `istree(x)` is `true`.
+"""
+function tail end
+export tail
+
 
 """
   operation(x)
 
 If `x` is a term as defined by `istree(x)`, `operation(x)` returns the
-head of the term if `x` represents a function call, for example, the head
+operation of the term if `x` represents a function call, for example, the head
 is the function being called.
 """
 function operation end
@@ -108,21 +125,32 @@ end
 
 
 """
-  similarterm(x, head, args, symtype=nothing; metadata=nothing, exprhead=:call)
+  maketerm(head::H, tail; type=Any, metadata=nothing)
 
+Has to be implemented by the provider of H.
 Returns a term that is in the same closure of types as `typeof(x)`,
-with `head` as the head and `args` as the arguments, `type` as the symtype
-and `metadata` as the metadata. By default this will execute `head(args...)`.
-`x` parameter can also be a `Type`. The `exprhead` keyword argument is useful 
-when manipulating `Expr`s.
+with `head` as the head and `tail` as the arguments, `type` as the symtype
+and `metadata` as the metadata. 
 """
-function similarterm(x, head, args, symtype = nothing; metadata = nothing, exprhead = nothing)
-    head(args...)
-end
+function maketerm(head, tail; type=Any, metadata=nothing) end
+export maketerm
 
-export similarterm
+"""
+  is_operation(f)
 
-include("utils.jl")
+Returns a single argument anonymous function predicate, that returns `true` if and only if
+the argument to the predicate satisfies `istree` and `operation(x) == f` 
+"""
+is_operation(f) = @nospecialize(x) -> istree(x) && (operation(x) == f)
+export is_operation
+
+
+"""
+  node_count(t)
+Count the nodes in a symbolic expression tree satisfying `istree` and `arguments`.
+"""
+node_count(t) = istree(t) ? reduce(+, node_count(x) for x in arguments(t), init = 0) + 1 : 1
+export node_count
 
 include("expr.jl")
 
