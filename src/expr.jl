@@ -7,7 +7,7 @@ end
 export ExprHead
 
 istree(x::Expr) = true
-head(e::Expr) = ExprHead(head)
+head(e::Expr) = ExprHead(e.head)
 tail(e::Expr) = e.args
 
 # See https://docs.julialang.org/en/v1/devdocs/ast/
@@ -31,11 +31,6 @@ function arguments(e::Expr)
   else
     e.args
   end
-  expr_arguments(e, Val{exprhead(e)}())
-end
-
-function similarterm(x::Expr, head, args, symtype=nothing; metadata=nothing, exprhead=exprhead(x))
-  expr_similarterm(head, args, Val{exprhead}())
 end
 
 maketerm(head::ExprHead, tail; type=Any, metadata=nothing) = Expr(head.head, tail...)
