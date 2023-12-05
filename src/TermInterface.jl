@@ -48,11 +48,23 @@ export exprhead
 """
   head(x)
 
-If `x` is a term as defined by `istree(x)`, `head(x)` returns the
-head of the term if `x`. The `head` type has to be provided by the package.
+If `x` is a term as defined by `istree(x)`, `head(x)` returns the head of the
+term if `x`. The `head` type has to be provided by the package.
 """
 function head end
 export head
+
+"""
+  head_symbol(x::HeadType)
+
+If `x` is a head object, `head_symbol(T, x)` returns a `Symbol` object that
+corresponds to `y.head` if `y` was the representation of the corresponding term
+as a Julia Expression. This is useful to define interoperability between
+symbolic term types defined in different packages and should be used when
+calling `maketerm`.
+"""
+function head_symbol end
+export head_symbol
 
 """
   tail(x)

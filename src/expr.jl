@@ -6,6 +6,8 @@ struct ExprHead
 end
 export ExprHead
 
+head_symbol(eh::ExprHead) = eh.head
+
 istree(x::Expr) = true
 head(e::Expr) = ExprHead(e.head)
 tail(e::Expr) = e.args
@@ -33,4 +35,10 @@ function arguments(e::Expr)
   end
 end
 
-maketerm(head::ExprHead, tail; type=Any, metadata=nothing) = Expr(head.head, tail...)
+function maketerm(head::ExprHead, tail; type=Any, metadata=nothing)
+  if !isempty(tail) && first(tail) isa Union{Function,DataType}
+    Expr(head.head, nameof(first(tail)), @view(tail[2:end])...)
+  else
+    Expr(head.head, tail...)
+  end
+end
