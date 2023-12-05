@@ -18,8 +18,6 @@ function operation(e::Expr)
   hh = h.head
   if hh in (:call, :macrocall)
     e.args[1]
-  elseif hh == :ref
-    getindex
   else
     hh
   end
