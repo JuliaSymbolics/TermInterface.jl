@@ -167,23 +167,27 @@ export node_count
 include("expr.jl")
 
 """ 
-Take a struct definition and automatically define `TermInterface` methods.
-This will automatically define a head type. If the struct is called `Foo`, then
+  @matchable struct Foo fields... end [HeadType]
+
+Take a struct definition and automatically define `TermInterface` methods. This
+will automatically define a head type. If `HeadType` is given then it will be
+used as `head(::Foo)`. If it is omitted, and the struct is called `Foo`, then
 the head type will be called `FooHead`. The `head_symbol` of such head types
 will default to `:call`.
 """
-macro matchable(expr)
+macro matchable(expr, head_name=nothing)
   @assert expr.head == :struct
   name = expr.args[2]
   if name isa Expr
     name.head === :(<:) && (name = name.args[1])
     name isa Expr && name.head === :curly && (name = name.args[1])
   end
-  fields = filter(x -> x isa Symbol || (x isa Expr && x.head == :(==)), expr.args[3].args)
+  fields = filter(x -> x isa Symbol || (x isa Expr && x.head == :(::)), expr.args[3].args)
   get_name(s::Symbol) = s
   get_name(e::Expr) = (@assert(e.head == :(::)); e.args[1])
   fields = map(get_name, fields)
-  head_name = Symbol(name, :Head)
+  head_name = isnothing(head_name) ? Symbol(name, :Head) : head_name
+
   quote
     $expr
     struct $head_name

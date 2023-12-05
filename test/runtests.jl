@@ -48,7 +48,7 @@ end
 @testset "Automatically Generated Methods" begin
     @matchable struct Bar
         a
-        b
+        b::Int
     end
 
     t = Bar(1, 2)
