@@ -1,5 +1,4 @@
-using TermInterface
-using Test
+using TermInterface, Test
 
 @testset "Expr" begin
     ex = :(f(a, b))
@@ -20,4 +19,43 @@ using Test
     @test operation(ex) == :block
     @test tail(ex) == arguments(ex) == [:a, :b, :c]
     @test ex == maketerm(ExprHead(:block), [:a, :b, :c])
+end
+
+@testset "Custom Struct" begin
+    struct Foo
+        args
+        Foo(args...) = new(args)
+    end
+    struct FooHead
+        head
+    end
+    TermInterface.head(::Foo) = FooHead(:call)
+    TermInterface.head_symbol(q::FooHead) = q.head
+    TermInterface.operation(::Foo) = Foo
+    TermInterface.istree(::Foo) = true
+    TermInterface.arguments(x::Foo) = [x.args...]
+    TermInterface.tail(x::Foo) = [operation(x); x.args...]
+
+    t = Foo(1, 2)
+    @test head(t) == FooHead(:call)
+    @test head_symbol(head(t)) == :call
+    @test operation(t) == Foo
+    @test istree(t) == true
+    @test arguments(t) == [1, 2]
+    @test tail(t) == [Foo, 1, 2]
+end
+
+@testset "Automatically Generated Methods" begin
+    @matchable struct Bar
+        a
+        b
+    end
+
+    t = Bar(1, 2)
+    @test head(t) == BarHead(:call)
+    @test head_symbol(head(t)) == :call
+    @test operation(t) == Bar
+    @test istree(t) == true
+    @test arguments(t) == (1, 2)
+    @test tail(t) == [Bar, 1, 2]
 end

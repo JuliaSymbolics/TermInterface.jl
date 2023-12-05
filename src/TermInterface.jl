@@ -166,5 +166,41 @@ export node_count
 
 include("expr.jl")
 
+""" 
+Take a struct definition and automatically define `TermInterface` methods.
+This will automatically define a head type. If the struct is called `Foo`, then
+the head type will be called `FooHead`. The `head_symbol` of such head types
+will default to `:call`.
+"""
+macro matchable(expr)
+  @assert expr.head == :struct
+  name = expr.args[2]
+  if name isa Expr
+    name.head === :(<:) && (name = name.args[1])
+    name isa Expr && name.head === :curly && (name = name.args[1])
+  end
+  fields = filter(x -> x isa Symbol || (x isa Expr && x.head == :(==)), expr.args[3].args)
+  get_name(s::Symbol) = s
+  get_name(e::Expr) = (@assert(e.head == :(::)); e.args[1])
+  fields = map(get_name, fields)
+  head_name = Symbol(name, :Head)
+  quote
+    $expr
+    struct $head_name
+      head
+    end
+    TermInterface.head_symbol(x::$head_name) = x.head
+    # TODO default to call?
+    TermInterface.head(::$name) = $head_name(:call)
+    TermInterface.istree(::$name) = true
+    TermInterface.operation(::$name) = $name
+    TermInterface.arguments(x::$name) = getfield.((x,), ($(QuoteNode.(fields)...),))
+    TermInterface.tail(x::$name) = [operation(x); arguments(x)...]
+    TermInterface.arity(x::$name) = $(length(fields))
+    Base.length(x::$name) = $(length(fields) + 1)
+  end |> esc
+end
+export @matchable
+
 end # module
 
