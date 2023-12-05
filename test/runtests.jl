@@ -10,9 +10,18 @@ using TermInterface, Test
 
     ex = :(arr[i, j])
     @test head(ex) == ExprHead(:ref)
-    @test operation(ex) == getindex
+    @test operation(ex) == :ref
     @test arguments(ex) == [:arr, :i, :j]
     @test ex == maketerm(ExprHead(:ref), [:arr, :i, :j])
+
+
+    ex = :(i, j)
+    @test head(ex) == ExprHead(:tuple)
+    @test operation(ex) == :tuple
+    @test arguments(ex) == [:i, :j]
+    @test tail(ex) == [:i, :j]
+    @test ex == maketerm(ExprHead(:tuple), [:i, :j])
+
 
     ex = Expr(:block, :a, :b, :c)
     @test head(ex) == ExprHead(:block)
