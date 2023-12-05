@@ -3,7 +3,7 @@ using TermInterface, Test
 @testset "Expr" begin
     ex = :(f(a, b))
     @test head(ex) == ExprHead(:call)
-    @test tail(ex) == [:f, :a, :b]
+    @test children(ex) == [:f, :a, :b]
     @test operation(ex) == :f
     @test arguments(ex) == [:a, :b]
     @test ex == maketerm(ExprHead(:call), [:f, :a, :b])
@@ -19,14 +19,14 @@ using TermInterface, Test
     @test head(ex) == ExprHead(:tuple)
     @test operation(ex) == :tuple
     @test arguments(ex) == [:i, :j]
-    @test tail(ex) == [:i, :j]
+    @test children(ex) == [:i, :j]
     @test ex == maketerm(ExprHead(:tuple), [:i, :j])
 
 
     ex = Expr(:block, :a, :b, :c)
     @test head(ex) == ExprHead(:block)
     @test operation(ex) == :block
-    @test tail(ex) == arguments(ex) == [:a, :b, :c]
+    @test children(ex) == arguments(ex) == [:a, :b, :c]
     @test ex == maketerm(ExprHead(:block), [:a, :b, :c])
 end
 
@@ -43,7 +43,7 @@ end
     TermInterface.operation(::Foo) = Foo
     TermInterface.istree(::Foo) = true
     TermInterface.arguments(x::Foo) = [x.args...]
-    TermInterface.tail(x::Foo) = [operation(x); x.args...]
+    TermInterface.children(x::Foo) = [operation(x); x.args...]
 
     t = Foo(1, 2)
     @test head(t) == FooHead(:call)
@@ -51,7 +51,7 @@ end
     @test operation(t) == Foo
     @test istree(t) == true
     @test arguments(t) == [1, 2]
-    @test tail(t) == [Foo, 1, 2]
+    @test children(t) == [Foo, 1, 2]
 end
 
 @testset "Automatically Generated Methods" begin
@@ -66,5 +66,5 @@ end
     @test operation(t) == Bar
     @test istree(t) == true
     @test arguments(t) == (1, 2)
-    @test tail(t) == [Bar, 1, 2]
+    @test children(t) == [Bar, 1, 2]
 end

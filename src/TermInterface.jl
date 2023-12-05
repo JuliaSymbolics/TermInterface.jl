@@ -67,12 +67,12 @@ function head_symbol end
 export head_symbol
 
 """
-  tail(x)
+  children(x)
 
 Get the arguments of `x`, must be defined if `istree(x)` is `true`.
 """
-function tail end
-export tail
+function children end
+export children
 
 
 """
@@ -137,14 +137,14 @@ end
 
 
 """
-  maketerm(head::H, tail; type=Any, metadata=nothing)
+  maketerm(head::H, children; type=Any, metadata=nothing)
 
 Has to be implemented by the provider of H.
 Returns a term that is in the same closure of types as `typeof(x)`,
-with `head` as the head and `tail` as the arguments, `type` as the symtype
+with `head` as the head and `children` as the arguments, `type` as the symtype
 and `metadata` as the metadata. 
 """
-function maketerm(head, tail; type=Any, metadata=nothing) end
+function maketerm end
 export maketerm
 
 """
@@ -199,7 +199,7 @@ macro matchable(expr, head_name=nothing)
     TermInterface.istree(::$name) = true
     TermInterface.operation(::$name) = $name
     TermInterface.arguments(x::$name) = getfield.((x,), ($(QuoteNode.(fields)...),))
-    TermInterface.tail(x::$name) = [operation(x); arguments(x)...]
+    TermInterface.children(x::$name) = [operation(x); arguments(x)...]
     TermInterface.arity(x::$name) = $(length(fields))
     Base.length(x::$name) = $(length(fields) + 1)
   end |> esc
