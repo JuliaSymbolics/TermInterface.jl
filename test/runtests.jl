@@ -2,32 +2,33 @@ using TermInterface, Test
 
 @testset "Expr" begin
     ex = :(f(a, b))
-    @test head(ex) == ExprHead(:call)
-    @test children(ex) == [:f, :a, :b]
-    @test operation(ex) == :f
-    @test arguments(ex) == [:a, :b]
-    @test ex == maketerm(ExprHead(:call), [:f, :a, :b])
+    @test istree(ex)
+    @test is_function_call(ex)
+    @test head(ex) == :f
+    @test children(ex) == [:a, :b]
+    @test ex == maketerm(Expr, :f, [:a, :b])
 
     ex = :(arr[i, j])
-    @test head(ex) == ExprHead(:ref)
-    @test operation(ex) == :ref
-    @test arguments(ex) == [:arr, :i, :j]
-    @test ex == maketerm(ExprHead(:ref), [:arr, :i, :j])
+    @test istree(ex)
+    @test !is_function_call(ex)
+    @test head(ex) == :ref
+    @test children(ex) == [:arr, :i, :j]
+    @test ex == maketerm(Expr, :ref, [:arr, :i, :j]; is_call=false)
 
 
     ex = :(i, j)
-    @test head(ex) == ExprHead(:tuple)
-    @test operation(ex) == :tuple
-    @test arguments(ex) == [:i, :j]
+    @test istree(ex)
+    @test !is_function_call(ex)
+    @test head(ex) == :tuple
     @test children(ex) == [:i, :j]
-    @test ex == maketerm(ExprHead(:tuple), [:i, :j])
-
+    @test ex == maketerm(Expr, :tuple, [:i, :j]; is_call=false)
 
     ex = Expr(:block, :a, :b, :c)
-    @test head(ex) == ExprHead(:block)
-    @test operation(ex) == :block
-    @test children(ex) == arguments(ex) == [:a, :b, :c]
-    @test ex == maketerm(ExprHead(:block), [:a, :b, :c])
+    @test istree(ex)
+    @test !is_function_call(ex)
+    @test head(ex) == :block
+    @test children(ex) == [:a, :b, :c]
+    @test ex == maketerm(Expr, :block, [:a, :b, :c]; is_call=false)
 end
 
 @testset "Custom Struct" begin
@@ -35,23 +36,16 @@ end
         args
         Foo(args...) = new(args)
     end
-    struct FooHead
-        head
-    end
-    TermInterface.head(::Foo) = FooHead(:call)
-    TermInterface.head_symbol(q::FooHead) = q.head
-    TermInterface.operation(::Foo) = Foo
     TermInterface.istree(::Foo) = true
-    TermInterface.arguments(x::Foo) = [x.args...]
-    TermInterface.children(x::Foo) = [operation(x); x.args...]
+    TermInterface.is_function_call(::Foo) = true
+    TermInterface.head(::Foo) = Foo
+    TermInterface.children(x::Foo) = collect(x.args)
 
     t = Foo(1, 2)
-    @test head(t) == FooHead(:call)
-    @test head_symbol(head(t)) == :call
-    @test operation(t) == Foo
-    @test istree(t) == true
-    @test arguments(t) == [1, 2]
-    @test children(t) == [Foo, 1, 2]
+    @test istree(t)
+    @test is_function_call(t)
+    @test head(t) == Foo
+    @test children(t) == [1, 2]
 end
 
 @testset "Automatically Generated Methods" begin
@@ -61,10 +55,8 @@ end
     end
 
     t = Bar(1, 2)
-    @test head(t) == BarHead(:call)
-    @test head_symbol(head(t)) == :call
-    @test operation(t) == Bar
-    @test istree(t) == true
-    @test arguments(t) == (1, 2)
-    @test children(t) == [Bar, 1, 2]
+    @test istree(t)
+    @test is_function_call(t)
+    @test head(t) == Bar
+    @test children(t) == (1, 2)
 end
