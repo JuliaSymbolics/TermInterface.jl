@@ -3,6 +3,7 @@ using TermInterface, Test
 @testset "Expr" begin
     ex = :(f(a, b))
     @test head(ex) == ExprHead(:call)
+    @test is_function_call(ex) == true
     @test children(ex) == [:f, :a, :b]
     @test operation(ex) == :f
     @test arguments(ex) == [:a, :b]
@@ -10,6 +11,7 @@ using TermInterface, Test
 
     ex = :(arr[i, j])
     @test head(ex) == ExprHead(:ref)
+    @test is_function_call(ex) == false
     @test operation(ex) == :ref
     @test arguments(ex) == [:arr, :i, :j]
     @test ex == maketerm(ExprHead(:ref), [:arr, :i, :j])
@@ -21,7 +23,6 @@ using TermInterface, Test
     @test arguments(ex) == [:i, :j]
     @test children(ex) == [:i, :j]
     @test ex == maketerm(ExprHead(:tuple), [:i, :j])
-
 
     ex = Expr(:block, :a, :b, :c)
     @test head(ex) == ExprHead(:block)
@@ -40,31 +41,12 @@ end
     end
     TermInterface.head(::Foo) = FooHead(:call)
     TermInterface.head_symbol(q::FooHead) = q.head
-    TermInterface.operation(::Foo) = Foo
     TermInterface.istree(::Foo) = true
-    TermInterface.arguments(x::Foo) = [x.args...]
-    TermInterface.children(x::Foo) = [operation(x); x.args...]
+    TermInterface.children(x::Foo) = x.args
 
     t = Foo(1, 2)
     @test head(t) == FooHead(:call)
     @test head_symbol(head(t)) == :call
-    @test operation(t) == Foo
     @test istree(t) == true
-    @test arguments(t) == [1, 2]
-    @test children(t) == [Foo, 1, 2]
-end
-
-@testset "Automatically Generated Methods" begin
-    @matchable struct Bar
-        a
-        b::Int
-    end
-
-    t = Bar(1, 2)
-    @test head(t) == BarHead(:call)
-    @test head_symbol(head(t)) == :call
-    @test operation(t) == Bar
-    @test istree(t) == true
-    @test arguments(t) == (1, 2)
-    @test children(t) == [Bar, 1, 2]
+    @test children(t) == [1, 2]
 end

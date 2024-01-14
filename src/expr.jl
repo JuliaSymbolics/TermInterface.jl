@@ -6,11 +6,11 @@ struct ExprHead
 end
 export ExprHead
 
-head_symbol(eh::ExprHead) = eh.head
-
 istree(x::Expr) = true
 head(e::Expr) = ExprHead(e.head)
 children(e::Expr) = e.args
+
+is_function_call(e::Expr) = head(e).head in (:call, :macrocall)
 
 # See https://docs.julialang.org/en/v1/devdocs/ast/
 function operation(e::Expr)
@@ -19,7 +19,7 @@ function operation(e::Expr)
   if hh in (:call, :macrocall)
     e.args[1]
   else
-    hh
+    throw(ArgumentError("Not a function call"))
   end
 end
 
@@ -29,7 +29,7 @@ function arguments(e::Expr)
   if hh in (:call, :macrocall)
     e.args[2:end]
   else
-    e.args
+    throw(ArgumentError("Not a function call"))
   end
 end
 
