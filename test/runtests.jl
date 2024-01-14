@@ -11,23 +11,21 @@ using TermInterface, Test
 
     ex = :(arr[i, j])
     @test head(ex) == ExprHead(:ref)
+    @test children(ex) == [:arr, :i, :j]
     @test is_function_call(ex) == false
-    @test operation(ex) == :ref
-    @test arguments(ex) == [:arr, :i, :j]
     @test ex == maketerm(ExprHead(:ref), [:arr, :i, :j])
 
 
     ex = :(i, j)
     @test head(ex) == ExprHead(:tuple)
-    @test operation(ex) == :tuple
-    @test arguments(ex) == [:i, :j]
     @test children(ex) == [:i, :j]
+    @test is_function_call(ex) == false
     @test ex == maketerm(ExprHead(:tuple), [:i, :j])
 
     ex = Expr(:block, :a, :b, :c)
     @test head(ex) == ExprHead(:block)
-    @test operation(ex) == :block
-    @test children(ex) == arguments(ex) == [:a, :b, :c]
+    @test children(ex) == [:a, :b, :c]
+    @test is_function_call(ex) == false
     @test ex == maketerm(ExprHead(:block), [:a, :b, :c])
 end
 
