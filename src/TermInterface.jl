@@ -47,52 +47,23 @@ function children end
 export children
 
 """
-  is_function_call(x)
+  unsorted_children(x::T)
 
-Return true if `x` is a term as defined by `istree(x)` and corresponds to a
-function call. If true, `operation` and `arguments` must be defined
-appropriately.
-"""
-is_function_call(x) = false
-
-"""
-  operation(x)
-
-If `x` is a function call as defined by `is_function_call(x)`, `operation(x)`
-returns the function being called.
-"""
-function operation end
-export operation
-
-"""
-  arguments(x)
-
-If `x` is a function call as defined by `is_function_call(x)`, `arguments(x)`
-returns the arguments on which the function is called.
-"""
-function arguments end
-export arguments
-
-
-"""
-  unsorted_arguments(x::T)
-
-If x is a term satisfying `istree(x)` and your term type `T` orovides
-and optimized implementation for storing the arguments, this function can 
-be used to retrieve the arguments when the order of arguments does not matter 
+If x is a term satisfying `istree(x)` and your term type `T` provides
+and optimized implementation for storing the children, this function can 
+be used to retrieve the children when the order of children does not matter 
 but the speed of the operation does.
 """
-unsorted_arguments(x) = arguments(x)
-export unsorted_arguments
-
+unsorted_children(x) = children(x)
+export unsorted_children
 
 """
   arity(x)
 
-Returns the number of arguments of `x`. Implicitly defined 
-if `arguments(x)` is defined.
+Returns the number of children of `x`. Implicitly defined 
+if `children(x)` is defined.
 """
-arity(x) = length(arguments(x))
+arity(x) = length(children(x))
 export arity
 
 
