@@ -15,21 +15,12 @@ module TermInterface
 """
   istree(x)
 
-Returns `true` if `x` is a term. If true, `head`, `children` and 
+Returns `true` if `x` is a term. If true, `operation`, `arguments` and 
 `is_function_call` must also be defined for `x` appropriately.
 """
 istree(x) = false
 export istree
 
-"""
-  is_function_call(x)
-
-Returns true if a term abstractly represents a function call or function application.
-Must be defined if `istree(x)` is defined. 
-Can be true only if `istree(x)` is true.
-"""
-function is_function_call end
-export is_function_call
 
 """
   symtype(x)
@@ -56,30 +47,30 @@ export issym
 
 
 """
-  head(x)
+  operation(x)
 
-If `x` is a term as defined by `istree(x)`, `head(x)` returns the head of the
-term. If `x` represents a function call term like `f(a,b)`, the head
+If `x` is a term as defined by `istree(x)`, `operation(x)` returns the operation of the
+term. If `x` represents a function call term like `f(a,b)`, the operation
 is the function being called, `f`.
 """
-function head end
-export head
+function operation end
+export operation
 
 
 """
-  children(x)
+  arguments(x)
 
-Get the children of a term `x`, must be defined if `istree(x)` is `true`.
+Get the arguments of a term `x`, must be defined if `istree(x)` is `true`.
 """
-function children end
-export children
+function arguments end
+export arguments
 
 """
-  unsorted_children(x::T)
+  unsorted_arguments(x::T)
 
 If x is a term satisfying `istree(x)` and your term type `T` provides
-and optimized implementation for storing the children, this function can 
-be used to retrieve the children when the order of arguments does not matter 
+and optimized implementation for storing the arguments, this function can 
+be used to retrieve the arguments when the order of arguments does not matter 
 but the speed of the operation does.
 """
 unsorted_arguments(x) = arguments(x)
@@ -89,10 +80,10 @@ export unsorted_arguments
 """
   arity(x)
 
-Returns the number of children of `x`. Implicitly defined 
-if `children(x)` is defined.
+Returns the number of arguments of `x`. Implicitly defined 
+if `arguments(x)` is defined.
 """
-arity(x)::Int = length(children(x))
+arity(x)::Int = length(arguments(x))
 export arity
 
 
@@ -115,11 +106,11 @@ function metadata(x, data) end
 
 
 """
-  maketerm(T::Type, head, children; is_call = true, type=Any, metadata=nothing)
+  maketerm(T::Type, operation, arguments; is_call = true, type=Any, metadata=nothing)
 
 Has to be implemented by the provider of the expression type T.
 Returns a term that is in the same closure of types as `T`,
-with `head` as the head and `children` as the arguments, `type` as the symtype
+with `operation` as the operation and `arguments` as the arguments, `type` as the symtype
 and `metadata` as the metadata. 
 
 `is_call` is used to determine if the constructed term represents a function
@@ -135,40 +126,9 @@ export maketerm
   node_count(t)
 Count the nodes in a symbolic expression tree satisfying `istree` and `arguments`.
 """
-node_count(t) = istree(t) ? reduce(+, node_count(x) for x in children(t), init in 0) + 1 : 1
+node_count(t) = istree(t) ? reduce(+, node_count(x) for x in arguments(t), init in 0) + 1 : 1
 export node_count
 
-""" 
-  @matchable struct Foo fields... end [HeadType]
-
-Take a struct definition and automatically define `TermInterface` methods. 
-`is_function_call` of such type will default to `true`.
-"""
-macro matchable(expr)
-  @assert expr.head == :struct
-  name = expr.args[2]
-  if name isa Expr
-    name.head === :(<:) && (name = name.args[1])
-    name isa Expr && name.head === :curly && (name = name.args[1])
-  end
-  fields = filter(x -> x isa Symbol || (x isa Expr && x.head == :(::)), expr.args[3].args)
-  get_name(s::Symbol) = s
-  get_name(e::Expr) = (@assert(e.head == :(::)); e.args[1])
-  fields = map(get_name, fields)
-
-  quote
-    $expr
-    TermInterface.istree(::$name) = true
-    TermInterface.is_function_call(::$name) = true
-    TermInterface.head(::$name) = $name
-    TermInterface.children(x::$name) = getfield.((x,), ($(QuoteNode.(fields)...),))
-    TermInterface.arity(x::$name) = $(length(fields))
-    Base.length(x::$name) = $(length(fields) + 1)
-  end |> esc
-end
-export @matchable
-
-include("expr.jl")
 
 end # module
 
