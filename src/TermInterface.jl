@@ -103,7 +103,7 @@ function similarterm(x, head, args, symtype = nothing; metadata = nothing)
   similarterm(typeof(x), head, args, symtype = symtype, metadata = metadata)
 end
 
-function similarterm(x::DataType, head, args, symtype = nothing; metadata = nothing)
+function similarterm(T::DataType, head, args, symtype = nothing; metadata = nothing)
   head(args...)
 end
 
