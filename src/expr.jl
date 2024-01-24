@@ -7,7 +7,5 @@ operation(e::Expr) = e.head
 arguments(e::Expr) = e.args
 
 function similarterm(x::Expr, head, args, symtype = nothing; metadata = nothing)
-  res = Expr(head)
-  res.args = args
-  res
+  Expr(head, args...)
 end
