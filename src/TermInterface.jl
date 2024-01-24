@@ -32,21 +32,6 @@ issym(x) = false
 export issym
 
 """
-  exprhead(x)
-
-If `x` is a term as defined by `istree(x)`, `exprhead(x)` must return a symbol,
-corresponding to the head of the `Expr` most similar to the term `x`.
-If `x` represents a function call, for example, the `exprhead` is `:call`.
-If `x` represents an indexing operation, such as `arr[i]`, then `exprhead` is `:ref`.
-Note that `exprhead` is different from `operation` and both functions should 
-be defined correctly in order to let other packages provide code generation 
-and pattern matching features. 
-"""
-function exprhead end
-export exprhead
-
-
-"""
   operation(x)
 
 If `x` is a term as defined by `istree(x)`, `operation(x)` returns the
@@ -63,7 +48,6 @@ Get the arguments of `x`, must be defined if `istree(x)` is `true`.
 """
 function arguments end
 export arguments
-
 
 """
   unsorted_arguments(x::T)
@@ -106,18 +90,16 @@ function metadata(x, data)
   error("Setting metadata on $x is not possible")
 end
 
-
 """
-  similarterm(x, head, args, symtype=nothing; metadata=nothing, exprhead=:call)
+  similarterm(x, head, args, symtype=nothing; metadata=nothing)
 
 Returns a term that is in the same closure of types as `typeof(x)`,
 with `head` as the head and `args` as the arguments, `type` as the symtype
 and `metadata` as the metadata. By default this will execute `head(args...)`.
-`x` parameter can also be a `Type`. The `exprhead` keyword argument is useful 
-when manipulating `Expr`s.
+`x` parameter can also be a `Type`.
 """
-function similarterm(x, head, args, symtype = nothing; metadata = nothing, exprhead = nothing)
-    head(args...)
+function similarterm(x, head, args, symtype = nothing; metadata = nothing)
+  head(args...)
 end
 
 export similarterm
