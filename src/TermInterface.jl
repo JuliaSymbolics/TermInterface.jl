@@ -106,16 +106,12 @@ function metadata(x, data) end
 
 
 """
-  maketerm(T::Type, operation, arguments; is_call = true, type=Any, metadata=nothing)
+  maketerm(T::Type, operation, arguments; type=Any, metadata=nothing)
 
 Has to be implemented by the provider of the expression type T.
 Returns a term that is in the same closure of types as `T`,
 with `operation` as the operation and `arguments` as the arguments, `type` as the symtype
 and `metadata` as the metadata. 
-
-`is_call` is used to determine if the constructed term represents a function
-call. If `is_call = true`, then it must construct a term `x` such that
-`is_function_call(x) = true`, and vice-versa for `is_call = false`.
 """
 function maketerm end
 export maketerm
