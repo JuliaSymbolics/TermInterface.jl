@@ -1,11 +1,13 @@
 # This file contains default definitions for TermInterface methods on Julia
 # Builtin Expr type.
 
-istree(x::Expr) = true
+iscall(x::Expr) = x.head == :call
 
-operation(e::Expr) = e.head
-arguments(e::Expr) = e.args
+head(e::Expr) = e.head
+children(e::Expr) = e.args
 
-function similarterm(x::Expr, head, args, symtype = nothing; metadata = nothing)
-  Expr(head, args...)
+# ^ this will implicitly define operation and arguments
+
+function maketerm(::Type{Expr}, head, args, symtype, metadata)
+    Expr(head, args...)
 end
