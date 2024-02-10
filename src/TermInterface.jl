@@ -13,7 +13,7 @@ export iscall
 
 Alias of `iscall`
 """
-@depricate_binding istree iscall
+Base.@deprecate_binding istree iscall
 
 """
     isexpr(x)
@@ -120,10 +120,18 @@ end
 
 """
 function similarterm(x, op, args, symtype = nothing; metadata = nothing)
+    Base.depwarn("""`similarterm` is deprecated, use `maketerm` instead.
+                    See https://github.com/JuliaSymbolics/TermInterface.jl for details.
+                    The present call can be replaced by
+                    `maketerm(typeof(x), $(callhead(x)), [op, args...], symtype, metadata)`""")
+
     maketerm(typeof(x), callhead(x), [op, args...], symtype, metadata)
 end
+
 # Old fallback
 function similarterm(T::Type, op, args, symtype = nothing; metadata = nothing)
+    Base.depwarn("`similarterm` is deprecated, use `maketerm` instead." *
+                 "See https://github.com/JuliaSymbolics/TermInterface.jl for details.")
     op(args...)
 end
 
@@ -149,7 +157,11 @@ Note that `maketerm` may not necessarily return an object of type `T`. For examp
 it may return a representation which is more efficient.
 
 This function is used by term-manipulation routines to construct terms generically.
-Packages providing expression types must implement this method for each expression type.
+In these routines, `T` is usually the type of the input expression which is being manipulated.
+For example, when a subexpression is substituted, the outer expression is re-constructed with
+the sub-expression. `T` will be the type of the outer expression.
+
+Packages providing expression types _must_ implement this method for each expression type.
 
 If your types do not support type information or metadata, you still need to accept
 these arguments and may choose to not use them.
