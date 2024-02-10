@@ -8,12 +8,13 @@ must also be defined for `x`.
 iscall(x) = false
 export iscall
 
+Base.@deprecate_binding istree iscall
 """
    istree(x)
 
 Alias of `iscall`
 """
-Base.@deprecate_binding istree iscall
+istree
 
 """
     isexpr(x)
