@@ -124,7 +124,7 @@ function similarterm(x, op, args, symtype = nothing; metadata = nothing)
     Base.depwarn("""`similarterm` is deprecated, use `maketerm` instead.
                     See https://github.com/JuliaSymbolics/TermInterface.jl for details.
                     The present call can be replaced by
-                    `maketerm(typeof(x), $(callhead(x)), [op, args...], symtype, metadata)`""")
+                    `maketerm(typeof(x), $(callhead(x)), [op, args...], symtype, metadata)`""", :similarterm)
 
     maketerm(typeof(x), callhead(x), [op, args...], symtype, metadata)
 end
@@ -132,7 +132,7 @@ end
 # Old fallback
 function similarterm(T::Type, op, args, symtype = nothing; metadata = nothing)
     Base.depwarn("`similarterm` is deprecated, use `maketerm` instead." *
-                 "See https://github.com/JuliaSymbolics/TermInterface.jl for details.")
+                 "See https://github.com/JuliaSymbolics/TermInterface.jl for details.", :similarterm)
     op(args...)
 end
 
@@ -145,7 +145,6 @@ Used in this deprecation cycle of `similarterm` to find the `head` argument to
 `makterm`. Do not implement this, or use `similarterm` if you're using this package.
 """
 callhead(x) = typeof(x)
-callhead(x::Expr) = Expr
 
 """
     maketerm(T, head, children, type, metadata)
@@ -169,7 +168,7 @@ these arguments and may choose to not use them.
 """
 
 function maketerm(T::Type, head, children, type, metadata)
-    error("maketerm for $T is not impmlemented")
+    error("maketerm for $T is not implemented")
 end
 
 include("utils.jl")
