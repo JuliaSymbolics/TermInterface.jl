@@ -63,7 +63,7 @@ function children end
 Returns the function a function call expression is calling.
 `iscall(x)` must be true as a precondition.
 """
-operation(x) = iscall(x) ? first(children(x)) : error("operation called on a non-function call expression")
+function operation end
 export operation
 
 """
@@ -73,7 +73,6 @@ Returns the arguments to the function call in a function call expression.
 `iscall(x)` must be true as a precondition.
 """
 function arguments end
-arguments(x) = iscall(x) ? Iterators.drop(children(x), 1) : error("arguments called on a non-function call expression")
 export arguments
 
 """
