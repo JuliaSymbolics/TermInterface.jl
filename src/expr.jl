@@ -6,8 +6,9 @@ iscall(x::Expr) = x.head == :call
 head(e::Expr) = e.head
 children(e::Expr) = e.args
 
-# ^ this will implicitly define operation and arguments
+operation(e::Expr) = iscall(e) ? first(children(e)) : error("operation called on a non-function call expression")
+arguments(e::Expr) = iscall(e) ? @view(e.args[2:end]) : error("arguments called on a non-function call expression")
 
-function maketerm(::Type{Expr}, head, args, symtype, metadata)
+function maketerm(::Type{Expr}, head, args, symtype=nothing, metadata=nothing)
     Expr(head, args...)
 end

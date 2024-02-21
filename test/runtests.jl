@@ -3,12 +3,19 @@ using Test
 
 @testset "Expr" begin
     ex = :(f(a, b))
-    @test operation(ex) == :call
-    @test arguments(ex) == [:f, :a, :b]
-    @test ex == similarterm(ex, :call, [:f, :a, :b])
+    @test head(ex) == :call
+    @test children(ex) == [:f, :a, :b]
+    @test operation(ex) == :f
+    @test arguments(ex) == [:a, :b]
+    @test iscall(ex)
+    @test ex == similarterm(ex, :f, [:a, :b])
+    @test ex == maketerm(Expr, :call, [:f, :a, :b])
+
 
     ex = :(arr[i, j])
-    @test operation(ex) == :ref
-    @test arguments(ex) == [:arr, :i, :j]
-    @test ex == similarterm(ex, :ref, [:arr, :i, :j])
+    @test head(ex) == :ref
+    @test_throws ErrorException operation(ex)
+    @test_throws ErrorException arguments(ex)
+    @test !iscall(ex)
+    @test ex == maketerm(Expr, :ref, [:arr, :i, :j])
 end
