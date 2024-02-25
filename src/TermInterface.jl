@@ -143,7 +143,7 @@ export similarterm
 """
     callhead(x)
 Used in this deprecation cycle of `similarterm` to find the `head` argument to
-`makterm`. Do not implement this, or use `similarterm` if you're using this package.
+`maketerm`. Do not implement this, or use `similarterm` if you're using this package.
 """
 callhead(x) = typeof(x)
 
