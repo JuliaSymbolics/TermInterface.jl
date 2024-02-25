@@ -127,7 +127,7 @@ function similarterm(x, op, args, symtype=nothing; metadata=nothing)
                   The present call can be replaced by
                   `maketerm(typeof(x), $(head(x)), [op, args...], symtype, metadata)`""", :similarterm)
 
-  maketerm(typeof(x), head(x), [op, args...], symtype, metadata)
+  maketerm(typeof(x), callhead(x), [op, args...], symtype, metadata)
 end
 
 # Old fallback
