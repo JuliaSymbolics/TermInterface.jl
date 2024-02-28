@@ -50,12 +50,14 @@ export issym
 Returns the head of the S-expression.
 """
 function head end
+export head
 
 """
     children(x)
 Returns the children (aka tail) of the S-expression.
 """
 function children end
+export children
 
 """
   operation(x)
@@ -119,20 +121,20 @@ end
     similarterm(x, op, args, symtype=nothing; metadata=nothing)
 
 """
-function similarterm(x, op, args, symtype = nothing; metadata = nothing)
-    Base.depwarn("""`similarterm` is deprecated, use `maketerm` instead.
-                    See https://github.com/JuliaSymbolics/TermInterface.jl for details.
-                    The present call can be replaced by
-                    `maketerm(typeof(x), $(callhead(x)), [op, args...], symtype, metadata)`""", :similarterm)
+function similarterm(x, op, args, symtype=nothing; metadata=nothing)
+  Base.depwarn("""`similarterm` is deprecated, use `maketerm` instead.
+                  See https://github.com/JuliaSymbolics/TermInterface.jl for details.
+                  The present call can be replaced by
+                  `maketerm(typeof(x), $(head(x)), [op, args...], symtype, metadata)`""", :similarterm)
 
-    maketerm(typeof(x), callhead(x), [op, args...], symtype, metadata)
+  maketerm(typeof(x), callhead(x), [op, args...], symtype, metadata)
 end
 
 # Old fallback
-function similarterm(T::Type, op, args, symtype = nothing; metadata = nothing)
-    Base.depwarn("`similarterm` is deprecated, use `maketerm` instead." *
-                 "See https://github.com/JuliaSymbolics/TermInterface.jl for details.", :similarterm)
-    op(args...)
+function similarterm(T::Type, op, args, symtype=nothing; metadata=nothing)
+  Base.depwarn("`similarterm` is deprecated, use `maketerm` instead." *
+               "See https://github.com/JuliaSymbolics/TermInterface.jl for details.", :similarterm)
+  op(args...)
 end
 
 export similarterm
@@ -141,7 +143,7 @@ export similarterm
 """
     callhead(x)
 Used in this deprecation cycle of `similarterm` to find the `head` argument to
-`makterm`. Do not implement this, or use `similarterm` if you're using this package.
+`maketerm`. Do not implement this, or use `similarterm` if you're using this package.
 """
 callhead(x) = typeof(x)
 
@@ -166,9 +168,10 @@ If your types do not support type information or metadata, you still need to acc
 these arguments and may choose to not use them.
 """
 
-function maketerm(T::Type, head, children, type, metadata)
-    error("maketerm for $T is not implemented")
+function maketerm(T::Type, head, children, type=nothing, metadata=nothing)
+  error("maketerm for $T is not implemented")
 end
+export maketerm
 
 include("utils.jl")
 
