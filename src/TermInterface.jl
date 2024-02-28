@@ -8,14 +8,6 @@ must also be defined for `x`.
 iscall(x) = false
 export iscall
 
-Base.@deprecate_binding istree iscall
-"""
-   istree(x)
-
-Alias of `iscall`
-"""
-istree
-
 """
     isexpr(x)
 Returns `true` if `x` is an expression tree (an S-expression). If true, `head` and `children` methods must be defined for `x`.
@@ -148,7 +140,7 @@ Used in this deprecation cycle of `similarterm` to find the `head` argument to
 callhead(x) = typeof(x)
 
 """
-    maketerm(T, head, children, type, metadata)
+    maketerm(T, head, children, type=nothing, metadata=nothing)
 
 Constructs an expression. `T` is a constructor type, `head` and `children` are
 the head and tail of the S-expression, `type` is the `type` of the S-expression.
