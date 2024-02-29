@@ -117,35 +117,6 @@ function metadata(x, data)
   error("Setting metadata on $x is not implemented")
 end
 
-"""
-    similarterm(x, op, args, symtype=nothing; metadata=nothing)
-
-"""
-function similarterm(x, op, args, symtype=nothing; metadata=nothing)
-  Base.depwarn("""`similarterm` is deprecated, use `maketerm` instead.
-                  See https://github.com/JuliaSymbolics/TermInterface.jl for details.
-                  The present call can be replaced by
-                  `maketerm(typeof(x), $(head(x)), [op, args...], symtype, metadata)`""", :similarterm)
-
-  maketerm(typeof(x), callhead(x), [op, args...], symtype, metadata)
-end
-
-# Old fallback
-function similarterm(T::Type, op, args, symtype=nothing; metadata=nothing)
-  Base.depwarn("`similarterm` is deprecated, use `maketerm` instead." *
-               "See https://github.com/JuliaSymbolics/TermInterface.jl for details.", :similarterm)
-  op(args...)
-end
-
-export similarterm
-
-
-"""
-    callhead(x)
-Used in this deprecation cycle of `similarterm` to find the `head` argument to
-`maketerm`. Do not implement this, or use `similarterm` if you're using this package.
-"""
-callhead(x) = typeof(x)
 
 """
     maketerm(T, head, children, type, metadata)

@@ -8,7 +8,6 @@ using Test
     @test operation(ex) == :f
     @test arguments(ex) == [:a, :b]
     @test iscall(ex)
-    @test ex == similarterm(ex, :f, [:a, :b])
     @test ex == maketerm(Expr, :call, [:f, :a, :b])
 
 
