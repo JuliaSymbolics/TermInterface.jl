@@ -3,7 +3,6 @@
 
 iscall(x::Expr) = x.head == :call
 
-callhead(e::Expr) = e.head
 head(e::Expr) = e.head
 children(e::Expr) = e.args
 
