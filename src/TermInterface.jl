@@ -140,5 +140,7 @@ include("utils.jl")
 
 include("expr.jl")
 
+include("matchable.jl")
+
 end # module
 
