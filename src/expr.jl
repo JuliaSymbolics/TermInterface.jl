@@ -1,6 +1,7 @@
 # This file contains default definitions for TermInterface methods on Julia
 # Builtin Expr type.
 
+isexpr(x::Expr) = true
 iscall(x::Expr) = x.head == :call
 
 head(e::Expr) = e.head
