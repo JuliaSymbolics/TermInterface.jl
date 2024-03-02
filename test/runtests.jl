@@ -20,3 +20,18 @@ using Test
     @test !iscall(ex)
     @test ex == maketerm(Expr, :ref, [:arr, :i, :j])
 end
+
+@testset "Matchable Structs" begin
+    @matchable struct Lux
+        a
+        b
+    end
+
+    t = Lux(:a, :b)
+    @test isexpr(t)
+    @test iscall(t)
+    @test head(t) == Lux
+    @test operation(t) == Lux
+    @test collect(children(t)) == [:a, :b]
+    @test collect(arguments(t)) == [:a, :b]
+end
