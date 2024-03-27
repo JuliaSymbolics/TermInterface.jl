@@ -14,11 +14,6 @@ and [Metatheory.jl](https://github.com/0x0f0f0f/Metatheory.jl).
 Returns `true` if `x` is an expression tree (an S-expression). If true, `head`
 and `children` methods must be defined for `x`.
 
-#### `iscall(x::T)`
-
-Returns `true` if `x` is a function call expression. If true, `operation`, `arguments` must also be defined for `x::T`.
-
-
 #### `head(x)`
 
 Returns the head of the S-expression.
@@ -26,17 +21,6 @@ Returns the head of the S-expression.
 #### `children(x)`
 
 Returns the children (aka tail) of the S-expression.
-
-
-#### `operation(x)`
-
-Returns the function a function call expression is calling. `iscall(x)` must be
-true as a precondition.
-
-#### `arguments(x)`
-
-Returns the arguments to the function call in a function call expression.
-`iscall(x)` must be true as a precondition.
 
 #### `maketerm(T, head, children, type=nothing, metadata=nothing)`
 
@@ -56,6 +40,20 @@ Packages providing expression types _must_ implement this method for each expres
 
 If your types do not support type information or metadata, you still need to accept
 these arguments and may choose to not use them.
+
+#### `iscall(x::T)`
+
+Returns `true` if `x` is a function call expression. If true, `operation`, `arguments` must also be defined for `x::T`.
+
+#### `operation(x)`
+
+Returns the function a function call expression is calling. `iscall(x)` must be
+true as a precondition.
+
+#### `arguments(x)`
+
+Returns the arguments to the function call in a function call expression.
+`iscall(x)` must be true as a precondition.
 
 ### Optional
 
