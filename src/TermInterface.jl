@@ -105,9 +105,7 @@ export metadata
 
 Returns a `expr` with metadata `md` attached to it.
 """
-function metadata(x, data)
-  error("Setting metadata on $x is not implemented")
-end
+function metadata end
 
 
 """
@@ -131,9 +129,7 @@ If your types do not support type information or metadata, you still need to acc
 these arguments and may choose to not use them.
 """
 
-function maketerm(T::Type, head, children, type=nothing, metadata=nothing)
-  error("maketerm for $T is not implemented")
-end
+function maketerm end
 export maketerm
 
 include("utils.jl")
