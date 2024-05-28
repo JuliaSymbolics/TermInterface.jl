@@ -105,9 +105,7 @@ export metadata
 
 Returns a `expr` with metadata `md` attached to it.
 """
-function metadata(x, data)
-  error("Setting metadata on $x is not implemented")
-end
+function metadata end
 
 
 """
@@ -130,9 +128,7 @@ Packages providing expression types _must_ implement this method for each expres
 Giving `nothing` for `type` or `metadata` results in a default being selected.
 """
 
-function maketerm(T::Type, head, children, type, metadata)
-  error("maketerm for $T is not implemented")
-end
+function maketerm end
 export maketerm
 
 include("utils.jl")
