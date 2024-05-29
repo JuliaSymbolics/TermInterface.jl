@@ -109,7 +109,7 @@ function metadata end
 
 
 """
-    maketerm(T, head, children, type=nothing, metadata=nothing)
+    maketerm(T, head, children, type, metadata)
 
 Constructs an expression. `T` is a constructor type, `head` and `children` are
 the head and tail of the S-expression, `type` is the `type` of the S-expression.
@@ -125,8 +125,7 @@ the sub-expression. `T` will be the type of the outer expression.
 
 Packages providing expression types _must_ implement this method for each expression type.
 
-If your types do not support type information or metadata, you still need to accept
-these arguments and may choose to not use them.
+Giving `nothing` for `type` or `metadata` results in a default being selected.
 """
 
 function maketerm end
