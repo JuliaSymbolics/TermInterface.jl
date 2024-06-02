@@ -15,18 +15,6 @@ Returns `true` if `x` is an expression tree (an S-expression). If true, `head` a
 isexpr(x) = false
 export isexpr
 
-"""
-    symtype(expr)
-
-Returns the symbolic type of `expr`. By default this is just `typeof(expr)`.
-Define this for your symbolic types if you want `SymbolicUtils.simplify` to apply rules
-specific to numbers (such as commutativity of multiplication). Or such
-rules that may be implemented in the future.
-"""
-function symtype(x)
-  typeof(x)
-end
-export symtype
 
 """
     issym(x)
@@ -109,10 +97,10 @@ function metadata end
 
 
 """
-    maketerm(T, head, children, type, metadata)
+    maketerm(T, head, children, metadata)
 
 Constructs an expression. `T` is a constructor type, `head` and `children` are
-the head and tail of the S-expression, `type` is the `type` of the S-expression.
+the head and tail of the S-expression.
 `metadata` is any metadata attached to this expression.
 
 Note that `maketerm` may not necessarily return an object of type `T`. For example,
@@ -125,7 +113,7 @@ the sub-expression. `T` will be the type of the outer expression.
 
 Packages providing expression types _must_ implement this method for each expression type.
 
-Giving `nothing` for `type` or `metadata` results in a default being selected.
+Giving `nothing` for `metadata` should result in a default being selected.
 """
 
 function maketerm end
