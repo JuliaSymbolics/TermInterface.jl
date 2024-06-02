@@ -9,7 +9,7 @@ using Test
     @test arguments(ex) == [:a, :b]
     @test isexpr(ex)
     @test iscall(ex)
-    @test ex == maketerm(Expr, :call, [:f, :a, :b], nothing, nothing)
+    @test ex == maketerm(Expr, :call, [:f, :a, :b], nothing)
 
 
     ex = :(arr[i, j])
@@ -18,5 +18,5 @@ using Test
     @test_throws ErrorException arguments(ex)
     @test isexpr(ex)
     @test !iscall(ex)
-    @test ex == maketerm(Expr, :ref, [:arr, :i, :j], nothing, nothing)
+    @test ex == maketerm(Expr, :ref, [:arr, :i, :j], nothing)
 end
