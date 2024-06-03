@@ -131,7 +131,6 @@ Packages providing expression types _must_ implement this method for each expres
 
 Giving `nothing` for `metadata` should result in a default being selected.
 """
-
 function maketerm end
 export maketerm
 
