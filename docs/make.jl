@@ -1,7 +1,7 @@
 using Documenter
 using TermInterface
 
-const TERMINTERFACE_PATH = dirname(pathof(Metatheory))
+const TERMINTERFACE_PATH = dirname(pathof(TermInterface))
 
 
 makedocs(
@@ -9,9 +9,9 @@ makedocs(
     sitename="TermInterface.jl",
     pages=[
         "index.md"
-        "api.md"
-        "Tutorials" => tutorials
+        # "api.md"
     ],
+    checkdocs=:all,
 )
 
 deploydocs(repo="github.com/JuliaSymbolics/TermInterface.jl.git")
