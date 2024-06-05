@@ -56,7 +56,7 @@ function children end
 export children
 
 """
-  operation(x)
+    operation(x)
 
 Returns the function a function call expression is calling.
 `iscall(x)` must be true as a precondition.
@@ -65,7 +65,7 @@ function operation end
 export operation
 
 """
-  arguments(x)
+    arguments(x)
 
 Returns the arguments to the function call in a function call expression.
 `iscall(x)` must be true as a precondition.
@@ -74,7 +74,7 @@ function arguments end
 export arguments
 
 """
-  unsorted_arguments(x::T)
+    unsorted_arguments(x::T)
 
 If x is a expression satisfying `iscall(x)` and your expression type `T` provides
 and optimized implementation for storing the arguments, this function can 
@@ -86,7 +86,7 @@ export unsorted_arguments
 
 
 """
-  arity(x)
+    arity(x)
 
 When `x` satisfies `iscall`, returns the number of arguments of `x`.
 Implicitly defined if `arguments(x)` is defined.
@@ -96,7 +96,7 @@ export arity
 
 
 """
-  metadata(x)
+    metadata(x)
 
 Returns the metadata attached to `x`.
 """
@@ -105,7 +105,7 @@ export metadata
 
 
 """
-  metadata(expr, md)
+    metadata(expr, md)
 
 Returns a `expr` with metadata `md` attached to it.
 """
