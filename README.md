@@ -6,4 +6,4 @@ Its purpose is to provide a shared interface between various symbolic programmin
 
 ## Docs
 
-Read the documentation online at [TODO ADD LINK](https://github.com/JuliaSymbolics/TermInterface.jl/)
+[Read the documentation here.](https://juliasymbolics.github.io/TermInterface.jl/dev/)
