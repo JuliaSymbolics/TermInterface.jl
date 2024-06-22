@@ -51,9 +51,32 @@ export head
 """
     children(x)
 Returns the children (aka tail) of the S-expression.
+
+
+Depending on the type and internal representation of `x`,
+`children(x)` may return an unsorted collection nondeterministically,
+This is to make sure to retrieve the children of an AST node when the order of children does not matter,
+but the speed of the operation does.
+To ensure to retrieve children in a sorted manner, you can use 
+and implement the function `sorted_children`.
 """
 function children end
 export children
+
+"""
+    sorted_children(x::T)
+
+Returns the children of an AST node, in a **sorted fashion**.
+`isexpr(x)` must be true as a precondition. Analogous to `children`, 
+but ensures that the operation is deterministic and always returns 
+the children in the order they are stored.
+
+By default, this redirects to `children`, therefore implementing 
+it is optional.
+"""
+sorted_children(x) = children(x)
+export sorted_children
+
 
 """
     operation(x)
