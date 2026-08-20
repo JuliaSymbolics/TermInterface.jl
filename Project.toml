@@ -3,8 +3,12 @@ uuid = "8ea1fca8-c5ef-4a55-8b96-4e9afe9c9a3c"
 authors = ["Shashi Gowda <gowda@mit.edu>", "Alessandro Cheli <sudo-woodo3@protonmail.com>"]
 version = "2.0"
 
+[deps]
+PrecompileTools = "aea7be01-6a6a-4083-8856-8a6e6704d82a"
+
 [compat]
 julia = "1"
+PrecompileTools = "1"
 Test = "1"
 
 [extras]

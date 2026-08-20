@@ -9,6 +9,11 @@ using Test
     @test arguments(ex) == [:a, :b]
     @test isexpr(ex)
     @test iscall(ex)
+    @test arity(ex) == 2
+    @test metadata(ex) === nothing
+    @test is_operation(:f)(ex)
+    @test !is_operation(:g)(ex)
+    @test node_count(ex) == 4
     @test ex == maketerm(Expr, :call, [:f, :a, :b], nothing)
 
 
@@ -23,8 +28,8 @@ end
 
 @testset "Unsorted arguments" begin
     struct Sum
-        d::Dict{Int,Any}
-        Sum(xs...) = new(Dict{Int,Any}(xs...))
+        d::Dict{Int, Any}
+        Sum(xs...) = new(Dict{Int, Any}(xs...))
     end
 
     TermInterface.isexpr(s::Sum) = true

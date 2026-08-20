@@ -1,5 +1,7 @@
 module TermInterface
 
+using PrecompileTools: @compile_workload
+
 """
     isexpr(x)
 Returns `true` if `x` is an expression tree. If true, `head(x)` and `children(x)` methods must be defined for `x`.
@@ -171,5 +173,21 @@ include("utils.jl")
 
 include("expr.jl")
 
-end # module
+@compile_workload begin
+    ex = :(f(g(x), y))
+    isexpr(ex)
+    iscall(ex)
+    head(ex)
+    children(ex)
+    sorted_children(ex)
+    operation(ex)
+    arguments(ex)
+    sorted_arguments(ex)
+    arity(ex)
+    metadata(ex)
+    maketerm(Expr, head(ex), children(ex), nothing)
+    is_operation(:f)(ex)
+    node_count(ex)
+end
 
+end # module
