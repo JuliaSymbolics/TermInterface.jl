@@ -18,7 +18,13 @@ jobs:
         os: [ubuntu-latest]
         package:
           - {user: JuliaSymbolics, repo: Metatheory.jl, group: All}
-          - {user: JuliaSymbolics, repo: Symbolics.jl, group: All}
+          - {user: JuliaSymbolics, repo: Symbolics.jl, group: Core}
+          - {user: JuliaSymbolics, repo: Symbolics.jl, group: GroebnerExt}
+          - {user: JuliaSymbolics, repo: Symbolics.jl, group: D3TreesExt}
+          - {user: JuliaSymbolics, repo: Symbolics.jl, group: HypergeometricFunctionsExt}
+          - {user: JuliaSymbolics, repo: Symbolics.jl, group: Downstream}
+          - {user: JuliaSymbolics, repo: Symbolics.jl, group: SymPy}
+          - {user: JuliaSymbolics, repo: Symbolics.jl, group: SymPyPythonCall}
           - {user: JuliaSymbolics, repo: SymbolicUtils.jl, group: All}
           
     steps:
